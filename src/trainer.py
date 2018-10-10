@@ -35,6 +35,7 @@ class Trainer:
             if e % (epochs / 3) == 0 or e == epochs - 1:
                 print('[CHECK] total: {}'.format(self.total))
                 self.test()
+                self.train()
 
     def test(self):
         self.net.eval()
