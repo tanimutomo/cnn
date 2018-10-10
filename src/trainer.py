@@ -23,7 +23,9 @@ class Trainer:
 
         for e in range(epochs):
             for i, (data, label) in enumerate(self.train_loader):
-                pred = self.net(data.to(self.device))
+                data = data.to(self.device)
+                label = label.to(self.device)
+                pred = self.net(data)
                 loss = criterion(pred, label)
                 loss.backward()
                 optimizer.zero_grad()
@@ -37,7 +39,9 @@ class Trainer:
     def test(self):
         self.net.eval()
         for (data, label) in self.test_loader:
-            pred = self.net(data.to(self.device))
+            data = data.to(self.device)
+            label = label.to(self.device)
+            pred = self.net(data)
             prob, pred_class = torch.max(pred.data, 1)
             self.total += label.size(0)
             self.correct += (pred_class == label).sum().item()
