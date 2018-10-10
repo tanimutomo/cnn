@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.optim as optim
 
 class Trainer:
-    def __init__(self, train_loader, test_loader, net):
+    def __init__(self, train_loader, test_loader, net, device):
         self.train_loader = train_loader
         self.test_loader = test_loader
-        self.net = net
+        self.net = net.to(device)
 
         self.correct = 0
         self.total = 0
@@ -22,7 +22,7 @@ class Trainer:
 
         for e in range(epochs):
             for i, (data, label) in enumerate(self.train_loader):
-                pred = self.net(data)
+                pred = self.net(data.to(device))
                 loss = criterion(pred, label)
                 loss.backward()
                 optimizer.zero_grad()
@@ -36,7 +36,7 @@ class Trainer:
     def test(self):
         self.net.eval()
         for (data, label) in self.test_loader:
-            pred = self.net(data)
+            pred = self.net(data.to(device))
             prob, pred_class = torch.max(pred.data, 1)
             self.total += label.size(0)
             self.correct += (pred_class == label).sum().item()
