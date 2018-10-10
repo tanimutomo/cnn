@@ -5,6 +5,7 @@ import torch.optim as optim
 class Trainer:
     def __init__(self, train_loader, test_loader, net, device):
         self.device = device
+        print(self.device)
         self.train_loader = train_loader
         self.test_loader = test_loader
         self.net = net.to(self.device)
@@ -17,7 +18,7 @@ class Trainer:
         self.classes = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
     def train(self, epochs, lr):
-        self.net.train()
+        # self.net.train()
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.net.parameters(), lr=lr)
 
@@ -28,17 +29,16 @@ class Trainer:
                 pred = self.net(data)
                 loss = criterion(pred, label)
                 loss.backward()
-                optimizer.zero_grad()
                 optimizer.step()
+                optimizer.zero_grad()
             print('Epoch {0} Loss: {1}'.format(e, loss.item()))
 
             if e % (epochs / 3) == 0 or e == epochs - 1:
-                print('[CHECK] total: {}'.format(self.total))
                 self.test()
-                self.train()
+                # self.net.train()
 
     def test(self):
-        self.net.eval()
+        # self.net.eval()
         for (data, label) in self.test_loader:
             data = data.to(self.device)
             label = label.to(self.device)
