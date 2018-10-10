@@ -19,7 +19,6 @@ def main():
     test_loader = DataLoader(test_data, batch_size=4, shuffle=False)
 
     trainer = Trainer(train_loader, test_loader, CNN(), device)
-
     trainer.train(epochs=30, lr=1e-3)
 
 if __name__ == '__main__':
