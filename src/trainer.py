@@ -22,20 +22,21 @@ class Trainer:
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.net.parameters(), lr=lr)
 
-        for e in range(epochs):
-            for i, (data, label) in enumerate(self.train_loader):
-                data = data.to(self.device)
-                label = label.to(self.device)
-                pred = self.net(data)
-                loss = criterion(pred, label)
-                loss.backward()
-                optimizer.step()
-                optimizer.zero_grad()
-            print('Epoch {0} Loss: {1}'.format(e, loss.item()))
+        with torch.no_grad():
+            for e in range(epochs):
+                for i, (data, label) in enumerate(self.train_loader):
+                    data = data.to(self.device)
+                    label = label.to(self.device)
+                    pred = self.net(data)
+                    loss = criterion(pred, label)
+                    loss.backward()
+                    optimizer.step()
+                    optimizer.zero_grad()
+                print('Epoch {0} Loss: {1}'.format(e, loss.item()))
 
-            if e % (epochs / 3) == 0 or e == epochs - 1:
-                self.test()
-                # self.net.train()
+                if e % (epochs / 3) == 0 or e == epochs - 1:
+                    self.test()
+                    # self.net.train()
 
     def test(self):
         # self.net.eval()
