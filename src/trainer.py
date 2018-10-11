@@ -22,7 +22,6 @@ class Trainer:
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=0.9)
 
-        sum_loss = 0.0
         for e in range(epochs):
             sum_loss = 0.0
             for i, (data, label) in enumerate(self.train_loader):
