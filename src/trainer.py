@@ -8,7 +8,7 @@ class Trainer:
         print(self.device)
         self.train_loader = train_loader
         self.test_loader = test_loader
-        self.net = net.to(self.device)
+        self.model = net.to(self.device)
 
         self.correct = 0
         self.total = 0
@@ -18,9 +18,9 @@ class Trainer:
         self.classes = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
     def train(self, epochs, lr):
-        self.net.train()
+        self.model.train()
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(self.net.parameters(), lr=lr, momentum=0.9)
+        optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=0.9)
 
         sum_loss = 0.0
         for e in range(epochs):
@@ -29,24 +29,26 @@ class Trainer:
                 data = data.to(self.device)
                 label = label.to(self.device)
                 optimizer.zero_grad()
-                pred = self.net(data)
+                pred = self.model(data)
                 loss = criterion(pred, label)
                 loss.backward()
                 optimizer.step()
                 sum_loss += loss.item()
             print('Epoch {0} Loss: {1}'.format(e, sum_loss / (i+1)))
 
-            if e % (epochs / 3) == 0 or e == epochs - 1:
+            if e % int(epochs / 3) == 0 or e == epochs - 1:
                 self.test()
-                self.net.train()
+                self.model.train()
+
+        torch.save(self.model.state_dict(), 'cnn_model.pth')
 
     def test(self):
-        self.net.eval()
+        self.model.eval()
         with torch.no_grad():
             for (data, label) in self.test_loader:
                 data = data.to(self.device)
                 label = label.to(self.device)
-                pred = self.net(data)
+                pred = self.model(data)
                 prob, pred_class = torch.max(pred.data, 1)
                 self.total += label.size(0)
                 self.correct += (pred_class == label).sum().item()
