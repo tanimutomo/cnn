@@ -18,7 +18,7 @@ class Trainer:
         self.classes = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
     def train(self, epochs, lr):
-        # self.net.train()
+        self.net.train()
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.net.parameters(), lr=lr, momentum=0.9)
 
@@ -38,10 +38,10 @@ class Trainer:
 
             if e % (epochs / 3) == 0 or e == epochs - 1:
                 self.test()
-                # self.net.train()
+                self.net.train()
 
     def test(self):
-        # self.net.eval()
+        self.net.eval()
         with torch.no_grad():
             for (data, label) in self.test_loader:
                 data = data.to(self.device)
