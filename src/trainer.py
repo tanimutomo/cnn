@@ -28,11 +28,11 @@ class Trainer:
             for i, (data, label) in enumerate(self.train_loader):
                 data = data.to(self.device)
                 label = label.to(self.device)
+                optimizer.zero_grad()
                 pred = self.net(data)
                 loss = criterion(pred, label)
                 loss.backward()
                 optimizer.step()
-                optimizer.zero_grad()
                 sum_loss += loss.item()
             print('Epoch {0} Loss: {1}'.format(e, sum_loss / (i+1)))
 
