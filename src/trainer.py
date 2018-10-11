@@ -20,39 +20,42 @@ class Trainer:
     def train(self, epochs, lr):
         # self.net.train()
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(self.net.parameters(), lr=lr)
+        optimizer = optim.SGD(self.net.parameters(), lr=lr, momentum=0.9)
 
-        with torch.no_grad():
-            for e in range(epochs):
-                for i, (data, label) in enumerate(self.train_loader):
-                    data = data.to(self.device)
-                    label = label.to(self.device)
-                    pred = self.net(data)
-                    loss = criterion(pred, label)
-                    loss.backward()
-                    optimizer.step()
-                    optimizer.zero_grad()
-                print('Epoch {0} Loss: {1}'.format(e, loss.item()))
+        sum_loss = 0.0
+        for e in range(epochs):
+            sum_loss = 0.0
+            for i, (data, label) in enumerate(self.train_loader):
+                data = data.to(self.device)
+                label = label.to(self.device)
+                pred = self.net(data)
+                loss = criterion(pred, label)
+                loss.backward()
+                optimizer.step()
+                optimizer.zero_grad()
+                sum_loss += loss.item()
+            print('Epoch {0} Loss: {1}'.format(e, sum_loss / (i+1)))
 
-                if e % (epochs / 3) == 0 or e == epochs - 1:
-                    self.test()
-                    # self.net.train()
+            if e % (epochs / 3) == 0 or e == epochs - 1:
+                self.test()
+                # self.net.train()
 
     def test(self):
         # self.net.eval()
-        for (data, label) in self.test_loader:
-            data = data.to(self.device)
-            label = label.to(self.device)
-            pred = self.net(data)
-            prob, pred_class = torch.max(pred.data, 1)
-            self.total += label.size(0)
-            self.correct += (pred_class == label).sum().item()
-            c = (pred_class == label).squeeze()
+        with torch.no_grad():
+            for (data, label) in self.test_loader:
+                data = data.to(self.device)
+                label = label.to(self.device)
+                pred = self.net(data)
+                prob, pred_class = torch.max(pred.data, 1)
+                self.total += label.size(0)
+                self.correct += (pred_class == label).sum().item()
+                c = (pred_class == label).squeeze()
 
-            for i in range(4):
-                l = label[i]
-                self.class_correct[l] += c[i].item()
-                self.class_total[l] += 1
+                for i in range(4):
+                    l = label[i]
+                    self.class_correct[l] += c[i].item()
+                    self.class_total[l] += 1
 
         print('Accuracy: {}%'.format(100 * self.correct / self.total))
         for i in range(10):
