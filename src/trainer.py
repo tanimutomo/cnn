@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -35,7 +36,7 @@ class Trainer:
                 sum_loss += loss.item()
             print('Epoch {0} Loss: {1}'.format(e, sum_loss / (i+1)))
 
-            if e % int(epochs / 3) == 0 or e == epochs - 1:
+            if e % math.ceil(epochs / 3) == 0 or e == epochs - 1:
                 self.test()
                 self.model.train()
 
