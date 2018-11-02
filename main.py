@@ -25,4 +25,5 @@ def main():
     trainer.train(epochs=1, lr=1e-3)
 
 if __name__ == '__main__':
+    print('START CNN MAIN')
     main()
