@@ -1,4 +1,4 @@
-dockerpath: './docker'
+docker_path: './docker'
 
 # Number of GPUs to use
 num_use_gpu: 1
