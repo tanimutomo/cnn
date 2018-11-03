@@ -1,5 +1,7 @@
 docker_path: './docker'
 
+kronos_path: '/home/tanimu/.pyenv/versions/miniconda3-4.3.30/bin/kronos'
+
 # Number of GPUs to use
 num_use_gpu: 1
 
