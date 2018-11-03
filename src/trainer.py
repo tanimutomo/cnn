@@ -40,7 +40,7 @@ class Trainer:
                 self.test()
                 self.model.train()
 
-        torch.save(self.model.state_dict(), 'cnn_model.pth')
+        torch.save(self.model.state_dict(), 'cnn_model_{}.pth'.format(epochs))
 
     def test(self):
         self.model.eval()
