@@ -28,6 +28,7 @@ class Trainer:
             for i, (data, label) in enumerate(self.train_loader):
                 data = data.to(self.device)
                 label = label.to(self.device)
+                print(type(data))
                 optimizer.zero_grad()
                 pred = self.model(data)
                 loss = criterion(pred, label)
